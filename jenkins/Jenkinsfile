@@ -18,9 +18,6 @@ pipeline {
                 failure {
                     echo "${STAGE_NAME} failed :( "
                 }
-                cleanup {
-                    cleanWs deleteDirs: true, notFailBuild: true
-                }
             }
         }
         stage('Test') {
@@ -37,9 +34,6 @@ pipeline {
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
-                }
-                cleanup {
-                    cleanWs deleteDirs: true, notFailBuild: true
                 }
             }
         }
