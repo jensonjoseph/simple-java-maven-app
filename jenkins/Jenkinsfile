@@ -1,17 +1,34 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v $HOME/.m2:/root/.m2'
-        }
-    }
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
+            post {
+                success {
+                    echo "${STAGE_NAME} success!!!"
+                }
+                failure {
+                    echo "${STAGE_NAME} failed :( "
+                }
+                cleanup {
+                    cleanWs deleteDirs: true, notFailBuild: true
+                }
+            }
         }
         stage('Test') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh 'mvn test'
                 jacoco()
@@ -23,6 +40,12 @@ pipeline {
             }
         }
         stage('Deliver') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh './jenkins/scripts/deliver.sh'
             }
