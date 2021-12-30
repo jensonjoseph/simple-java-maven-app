@@ -57,9 +57,6 @@ pipeline {
                 always {
                     archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
                 }
-                cleanup {
-                    cleanWs deleteDirs: true, notFailBuild: true
-                }
             }
         }
     }
